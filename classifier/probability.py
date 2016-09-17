@@ -13,6 +13,7 @@ def calculateSentiment(_features, _featureOccurenceValues):
     tweetWordProbability = []
     probabilityOfPositiveFeature = 1.0
     probabilityOfNegativeFeature = 1.0
+    result = 0
     
     # dbStatistics will handle the following functions
     # P ( Value )
@@ -22,8 +23,8 @@ def calculateSentiment(_features, _featureOccurenceValues):
     # totalNumberOfTweets = float(getNumberOfTweets())
     
     # FOR UNIT_TEST
-    totalNumberOfNegativeTweets = 31.0
-    totalNumberOfPositiveTweets = 163.0
+    totalNumberOfNegativeTweets = 77.0
+    totalNumberOfPositiveTweets = 137.0
     totalNumberOfTweets = 300.0
 
     probabilityOfPositivity = totalNumberOfPositiveTweets/totalNumberOfTweets
@@ -36,17 +37,28 @@ def calculateSentiment(_features, _featureOccurenceValues):
 
         else:
             # Need to create function that will address words that never appeared in the database
+
+            # Use API to get pos and neg probability, and multiply the probability with the total number of tweets
+
+            # Store in the database
+            
             continue
             
         # Maximum value of the list
-        probabilityOfPositiveFeature *= (listOfValues['pos'])/totalNumberOfPositiveTweets
-        probabilityOfNegativeFeature *= (listOfValues['neg'])/totalNumberOfNegativeTweets
+        probabilityOfPositiveFeature *= (listOfValues['pos'] + listOfValues['lpos'])/totalNumberOfPositiveTweets
+        probabilityOfNegativeFeature *= (listOfValues['neg'] + listOfValues['lneg'])/totalNumberOfNegativeTweets
         
         
         if(probabilityOfPositiveFeature > probabilityOfNegativeFeature):
-            result = 1
+            if(listOfValues['pos'] > listOfValues['lpos']):
+                result = 2
+            else:
+                result = 1
         elif(probabilityOfPositiveFeature < probabilityOfNegativeFeature):
-            result = -1
+            if(listOfValues['neg'] > listOfValues['lneg'])
+                result = -2
+            else:
+                result = -1
         else:
             result = 0               
     
@@ -62,9 +74,9 @@ def getTweetSentiment(_tweetObject):
     
     result = calculateSentiment(features, featureOccurenceValues)
 
-    # if(result == 0):
+    if(result == 0):
         # result = input('Require user analysis (pos, neg, neut) - ' + _tweetObject.getTweet() + ' - ')
-
+        result = 0
     
     # Determine the total value of the tweet    
     return result
