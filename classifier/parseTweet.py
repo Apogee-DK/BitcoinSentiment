@@ -110,6 +110,21 @@ def replaceNegation(tweet):
     return tweet
 
 
+# get currency price, USDJPY:CUR for USDJPY , CL1:COM for Crude oil and etc..
+def bbgPrice(quoteName):
+
+    base_url = 'http://www.bloomberg.com/quote/'
+    content = urllib.urlopen(base_url + quoteName).read()
+    anchor = '<div class="price">'
+    startIndex = content.index('<div class="price">')
+    content = content[startIndex + len(anchor) : startIndex + 45]
+    content = content.replace(",","")
+    m = re.findall('\d+.\d+', content)
+
+    return m[0]
+
+
+
 def normalize(tweet):
     """
     :param tweet: tweet text
