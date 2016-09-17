@@ -1,52 +1,48 @@
-# import parseTweet
+import parseTweet
 
 # Retrieves data from database
 # from dbStatistics import *
 
 def getfeatureOccurence():
-    # dbStatistics function that returns a list of 'key':[pos, neu, neg]
+    # dbStatistics function that returns a list of 'key': {'pos':1, 'neut':2, 'neg':3}
     return getKeyAndValue()
 
 def calculateSentiment(_features, _featureOccurenceValues):
 
     tweetWordProbability = []
-
-    probabilityOfFeatures = 1.0
     probabilityOfFeatureWithKnownValue = 1.0
     
     # dbStatistics will handle the following functions
     # P ( Value )
     # Must provide floating number
     totalNumberOfPositiveTweets = getNumberOfPositiveTweets()
+    totalNumberOfNegativeTweets = getNumberOfNegativeTweets()
     totalNumberOfTweets = float(getNumberOfTweets())
     
-    # for unit_test
+    # FOR UNIT_TEST
     # totalNumberOfPositiveTweets = 26
     # totalNumberOfTweets = 50
 
-    probabilityOfValue = totalNumberOfPositiveTweets/totalNumberOfTweets
+    probabilityOfPositivity = totalNumberOfPositiveTweets/totalNumberOfTweets
+    probabilityOfNegativity = 1.0 - probabilityOfPositivity
     
-    # P ( Feature )
-    for feature in _features:
-        listOfValues = _featureOccurenceValues[feature]
-        sum = 0
-
-        if(listOfValues['neut'] < listOfValues['pos'] or listOfValues['neut'] < listOfValues['neg']):
-            sum += listOfValues['pos'] + listOfValues['neut'] + listOfValues['neg']
-            tweetWordProbability.append(sum/totalNumberOfTweets)
-    
-    for probability in tweetWordProbability:
-        probabilityOfFeatures *= probability
-
     # P ( Feature | Value )
     for feature in _features:
         listOfValues = _featureOccurenceValues[feature]
         
         # Maximum value of the list
-        if(listOfValues['neut'] < listOfValues['pos'] or listOfValues['neut'] < listOfValues['neg']):
-            probabilityOfFeatureWithKnownValue *= listOfValues['pos']/totalNumberOfPositiveTweets
+        probabilityOfPositiveFeature *= listOfValues['pos']/totalNumberOfPositiveTweets
+        probabilityOfNegativeFeature *= listOfValues['neg']/totalNumberOfNegativeTweets
         
-    return (probabilityOfValue * probabilityOfFeatureWithKnownValue)/probabilityOfFeatures
+        
+        if(probabilityOfPositiveFeature > probabilityOfNegativeFeature):
+            result = 'pos'
+        elif(probabilityOfPositiveFeature < probabilityOfNegativeFeature):
+            result = 'neg'
+        else:
+            result = 'neut'               
+        
+    return result
 
 def getTweetSentiment(_tweetObject):
     # Get dictionary of <word, list of values (pos, neu, neg)>
@@ -55,8 +51,14 @@ def getTweetSentiment(_tweetObject):
     # Get necessary values from TweetObject
     features = _tweetObject.getFeatures()
 
+    result = calculateSentiment(features, featureOccurenceValues)
+
+    if(result == 'neut'):
+        input('Require user analysis (pos, neg, neut) - ' + _tweetObject)
+
+    
     # Determine the total value of the tweet
-    return calculateSentiment(features, featureOccurenceValues)
+    return result
 
 def unit_test():
     array = {'love' : {'neg':4, 'neut':10, 'pos':4},
