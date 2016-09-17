@@ -54,7 +54,7 @@ def getTweetSentiment(_tweetObject):
     result = calculateSentiment(features, featureOccurenceValues)
 
     if(result == 'neut'):
-        input('Require user analysis (pos, neg, neut) - ' + _tweetObject)
+        input('Require user analysis (pos, neg, neut) - ' + _tweetObject.getTweetText())
 
     
     # Determine the total value of the tweet
