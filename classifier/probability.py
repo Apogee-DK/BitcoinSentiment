@@ -40,7 +40,7 @@ def calculateSentiment(_features, _featureOccurenceValues):
         listOfValues = _featureOccurenceValues[feature]
         
         # Maximum value of the list
-        if(max(listOfValues) == listOfValues[neu])
+        if(max(listOfValues) == listOfValues[neut])
             continue
         
         # Getting only the positive value
