@@ -1,15 +1,16 @@
+import csv
 import re
 from nltk.corpus import stopwords
 import nltk
 import pprint
-import json
-import requests
-import pycurl
-import cStringIO, ast, sys, time
-#from vaderSentiment.vaderSentiment import sentiment as vaderSentiment
+
+import sys
+sys.path.insert(0, '../database/')
+
+from dbStatistics import *
 
 
-excludeWords = ['AT_USER', 'at_user', 'url', 'rt', 'user', 'btc', 'bitcoin', 'bitstamp']
+excludeWords = ['AT_USER', 'url', 'rt', 'user']
 weightedWords = {}
 
 
@@ -30,56 +31,8 @@ class TweetObject():
 
 # changed
 def getFeatures(tweetObj):
-    tokens = nltk.word_tokenize(tweetObj.tweetText)
-    return tokens
-
-# returns probabilities of 
-def textProcessingAPI(posts):
-
-    sentiments = []
-    try:
-        bufferIO = cStringIO.StringIO()
-        c = pycurl.Curl()
-        c.setopt(c.URL, 'http://text-processing.com/api/sentiment/')
-        c.setopt(c.WRITEFUNCTION, bufferIO.write)
-        postdata = 'text=' + posts
-        c.setopt(c.POSTFIELDS, postdata)
-        c.perform()
-        val = bufferIO.getvalue()
-        data = ast.literal_eval(val)
-        data["post"] = posts
-        sentiments.append(data)
-        bufferIO.close()
-    except pycurl.error, error:
-        errno, errstr = error
-        print "An error occured: ", errstr
-
-    #print "sentiments computed for %d posts" % cnt
-    print sentiments
-    return sentiments
-
-
-"""
-#compute sentiments using vaderSentiment
-def vaderSentimentAPI(posts):
-    sentiments = []
-    data = {}
-    data["post"] = posts
-    vs = vaderSentiment(posts)
-    #print vs
-    if vs["neg"] >= vs["neu"] and vs["neg"] >= vs["pos"]:
-        data["label"] = "neg"
-    elif vs["pos"] >= vs["neu"] and vs["pos"] >= vs["neg"]:
-        data["label"] = "pos"
-    elif vs["neu"] >= vs["neg"] and vs["neu"] >= vs["pos"]:
-        data["label"] = "neutral"    
-
-    data['probability'] = {'neg': vs['neg'], 'neutral': vs['neu'], 'pos': vs['pos']}
-    sentiments.append(data)
-    print sentiments
-    return sentiments
-"""
-
+        tokens = nltk.word_tokenize(tweetObj.tweetText)
+        return tokens
 
 def preprocessTweet(tweet):
 
@@ -108,21 +61,6 @@ def replaceNegation(tweet):
             tweet[i] = 'negati'
 
     return tweet
-
-
-# get currency price, USDJPY:CUR for USDJPY , CL1:COM for Crude oil and etc..
-def bbgPrice(quoteName):
-
-    base_url = 'http://www.bloomberg.com/quote/'
-    content = urllib.urlopen(base_url + quoteName).read()
-    anchor = '<div class="price">'
-    startIndex = content.index('<div class="price">')
-    content = content[startIndex + len(anchor) : startIndex + 45]
-    content = content.replace(",","")
-    m = re.findall('\d+.\d+', content)
-
-    return m[0]
-
 
 
 def normalize(tweet):
@@ -206,7 +144,29 @@ def classifyWord(tweet):
         # firebase.put(firebase_URL + token, {'pos': pos, 'neut': neut, 'neg': neg})
         # print token, ' ', firebase.get(firebase_URL + token)
         ##print ('\n')
-                
+        
 def getKeyAndValue():
-    return weightedWords   
+    return weightedWords
+
+tweetObjectList = []
+
+with open('../dataset/tweet2.csv', 'rb') as csvfile:
+    tweetreader = csv.DictReader(csvfile)
+    linectr = 0
+    
+    for row in tweetreader:
+        linectr += 1
+        # print', '.join(row)
+        # print row['tweetID'], row['tweetText']
+        to = TweetObject(row)
+        tweetObjectList.append(to)
+        if linectr == 300:
+            break
+
+for to in tweetObjectList:
+    print(to.userID, ' ', to.tweetText, ' ', to.sentiment)
+    classifyWord(to)
+    
+    # print '\n'
+
 
