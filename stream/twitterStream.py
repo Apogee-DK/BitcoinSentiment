@@ -116,7 +116,7 @@ def twitterParseText(tweet_count,keyword):
                             results = json.loads(urlopen('https://www.bitstamp.net/api/v2/ticker/btcusd/').read())
                             #results = json.loads(requests.get('https://www.bitstamp.net/api/v2/ticker/btcusd/').content)
                             price, volume, bid, ask, vwap = Decimal(results['last']), Decimal(results['volume']), Decimal(results['bid']), Decimal(results['ask']), Decimal(results['vwap'])
-			    # cursor.execute("INSERT INTO bitcoinParser (tweetID, userID, userName, tweetText, hashtags, btcPrice, btcBid, btcAsk, btcVwap, btcVolume, timeStamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+			                # cursor.execute("INSERT INTO bitcoinParser (tweetID, userID, userName, tweetText, hashtags, btcPrice, btcBid, btcAsk, btcVwap, btcVolume, timeStamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                             #               (tweet['id_str'], tweet['user']['id'], tweet['user']['name'], tempText,','.join(hashtags), price, bid, ask, vwap, volume, datetimeStamp))
                 
                             """
@@ -167,21 +167,7 @@ def twitterParseText(tweet_count,keyword):
                             print "price:  ", price
                             print "volume: ", volume
                             print ""
-                            """
-                            tweetSearch = t.search.tweets(q="bitcoin btc")
-                            searchArr.append(json.dumps(tweetSearch))
-                            search = json.loads(searchArr[searchCount])
-                            print search['statuses']['text']
-                            for search in tweetSearch:
-                                searchArr.append(json.dumps(search))
-                                search = json.loads(searchArr[searchCount])
-                                print search
-                                print search['statuses']['text'] # content of the tweet
-                                print "user: ", search['user']['name'] # id of user
-                                print ""
-                                searchCount += 1
-                            searchCount = 0
-                            """
+  
 
                 except ValueError, err:
                     # read in a line is not in JSON format (sometimes error occured)
@@ -244,6 +230,7 @@ def removeNonEnglishWords(tweet):
 
     newTweet = []
 
+    # remove all non-unicode characters
     for i in range(len(tweet)):
         if tweet[i] != '':
             chk = re.match(r'([a-zA-z0-9 \+\?\.\*\^\$\(\)\[\]\{\}\|\\/:;\'\"><,.#@!~`%&-_=])+$', tweet[i])

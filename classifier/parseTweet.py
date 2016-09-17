@@ -46,6 +46,17 @@ def preprocessTweet(tweet):
     return tweet
 
 
+# replace all negation words by "negati"
+def replaceNegation(tweet):
+
+    for i in range(len(tweet)):
+        word = tweet[i].lower()
+        if (word == "no" or word == "not" or word.count("n't") > 0 or word.count("esnt") > 0):
+            tweet[i] = 'negati'
+
+    return tweet
+
+
 def normalize(tweet):
     """
     :param tweet: tweet text
@@ -55,8 +66,7 @@ def normalize(tweet):
     tweet = re.sub('(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9]+)', 'USER', tweet)
     tweet = tweet.replace('\\', '')
     tweet = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', 'URL', tweet)
-    # result = re.sub('[^a-zA-Z]', ' ', result)
-    tweet = tweet.lower().split()
+    tweet = removeNegation(tweet.lower().split())
     stops = set(stopwords.words("english"))
     # append exclude words to the stopwords set
     stops.update(excludeWords)
