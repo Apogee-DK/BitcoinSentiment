@@ -5,7 +5,7 @@ import dbConvertToPython
 
 
 def getData():
-    array = []
+    wordOccurenceValues = []
     # dbConvertToPython goes here
 
     return array;
