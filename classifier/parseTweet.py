@@ -66,7 +66,7 @@ def normalize(tweet):
     tweet = re.sub('(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9]+)', 'USER', tweet)
     tweet = tweet.replace('\\', '')
     tweet = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', 'URL', tweet)
-    tweet = removeNegation(tweet.lower().split())
+    tweet = replaceNegation(tweet.lower().split())
     stops = set(stopwords.words("english"))
     # append exclude words to the stopwords set
     stops.update(excludeWords)
