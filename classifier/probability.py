@@ -17,25 +17,30 @@ def calculateSentiment(_features, _featureOccurenceValues):
     # dbStatistics will handle the following functions
     # P ( Value )
     # Must provide floating number
-    totalNumberOfPositiveTweets = float(getNumberOfPositiveTweets())
-    totalNumberOfNegativeTweets = float(getNumberOfNegativeTweets())
-    totalNumberOfTweets = float(getNumberOfTweets())
+    # totalNumberOfPositiveTweets = float(getNumberOfPositiveTweets())
+    # totalNumberOfNegativeTweets = float(getNumberOfNegativeTweets())
+    # totalNumberOfTweets = float(getNumberOfTweets())
     
     # FOR UNIT_TEST
-    # totalNumberOfNegativeTweets = 122.0
-    # totalNumberOfPositiveTweets = 225.0
-    # totalNumberOfTweets = 443.0
+    totalNumberOfNegativeTweets = 31.0
+    totalNumberOfPositiveTweets = 163.0
+    totalNumberOfTweets = 300.0
 
     probabilityOfPositivity = totalNumberOfPositiveTweets/totalNumberOfTweets
     probabilityOfNegativity = 1.0 - probabilityOfPositivity
     
     # P ( Feature | Value )
     for feature in _features:
-        listOfValues = _featureOccurenceValues[feature]
-        
+        if(feature in _featureOccurenceValues):
+            listOfValues = _featureOccurenceValues[feature]
+
+        else:
+            # Need to create function that will address words that never appeared in the database
+            continue
+            
         # Maximum value of the list
-        probabilityOfPositiveFeature *= listOfValues['pos']/totalNumberOfPositiveTweets
-        probabilityOfNegativeFeature *= listOfValues['neg']/totalNumberOfNegativeTweets
+        probabilityOfPositiveFeature *= (listOfValues['pos'])/totalNumberOfPositiveTweets
+        probabilityOfNegativeFeature *= (listOfValues['neg'])/totalNumberOfNegativeTweets
         
         
         if(probabilityOfPositiveFeature > probabilityOfNegativeFeature):
@@ -48,17 +53,17 @@ def calculateSentiment(_features, _featureOccurenceValues):
     return result
 
 def getTweetSentiment(_tweetObject):
-    # Get dictionary of <word, list of values (pos, neu, neg)>
+    # Get dictionary of <word, list of values (pos, lpos, neu, lneg, neg)>
     featureOccurenceValues = getfeatureOccurence()
     
     # Get necessary values from TweetObject
     features = getFeatures(_tweetObject)
-    print(features)
+    print(_tweetObject.getTweet())
     
     result = calculateSentiment(features, featureOccurenceValues)
 
-    if(result == 0):
-        result = input('Require user analysis (pos, neg, neut) - ' + _tweetObject.getTweet() + ' - ')
+    # if(result == 0):
+        # result = input('Require user analysis (pos, neg, neut) - ' + _tweetObject.getTweet() + ' - ')
 
     
     # Determine the total value of the tweet    
@@ -96,7 +101,7 @@ with open('../dataset/tweet2.csv', 'rb') as csvfile:
         # print row['tweetID'], row['tweetText']
         to = TweetObject(row)
         tweetObjectList.append(to)
-        if linectr == 10:
+        if linectr == 300:
             break
 
 for to in tweetObjectList:
@@ -110,10 +115,12 @@ with open('../dataset/tweet2.csv', 'rb') as csvfile:
     
     for row in tweetreader:
         linectr += 1
+        if(linectr < 301):
+            continue        
         # print', '.join(row)
         # print row['tweetID'], row['tweetText']
         to = TweetObject(row)
-        print(to.tweetText, " ", getTweetSentiment(to))
-        if linectr == 10:
+        print(getTweetSentiment(to))
+        if linectr == 143:
             break
 
