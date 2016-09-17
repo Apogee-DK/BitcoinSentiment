@@ -3,11 +3,11 @@ import parseTweet
 # Retrieves data from database
 from dbStatistics import *
 
-def getWordOccurence():
+def getfeatureOccurence():
     # dbStatistics function that returns a list of 'key':[pos, neu, neg]
     return getKeyAndValue()
 
-def calculateSentiment(_words, _wordOccurenceValues):
+def calculateSentiment(_features, _featureOccurenceValues):
 
     tweetWordProbability = []
 
@@ -22,8 +22,8 @@ def calculateSentiment(_words, _wordOccurenceValues):
     probabilityOfValue = totalNumberOfPositiveTweets/totalNumberOfTweets
     
     # P ( Feature )
-    for word in _words:
-        listOfValues = _wordOccurenceValues[word]
+    for feature in _features:
+        listOfValues = _featureOccurenceValues[feature]
         sum = 0
         
         for value in listOfValues:
@@ -36,8 +36,8 @@ def calculateSentiment(_words, _wordOccurenceValues):
         probabilityOfFeatures *= probability
 
     # P ( Feature | Value )
-    for word in _words:
-        listOfValues = _wordOccurenceValues[word]
+    for feature in _features:
+        listOfValues = _featureOccurenceValues[feature]
         
         # Maximum value of the list
         if(max(listOfValues) == listOfValues[neu])
@@ -51,10 +51,10 @@ def calculateSentiment(_words, _wordOccurenceValues):
 
 def getTweetSentiment(_tweetObject):
     # Get dictionary of <word, list of values (pos, neu, neg)>
-    wordOccurenceValues = getWordOccurence()
+    featureOccurenceValues = getfeatureOccurence()
     
     # Get necessary values from TweetObject
-    words = _tweetObject.getWords()
+    features = _tweetObject.getFeatures()
 
     # Determine the total value of the tweet
-    return calculateSentiment(words, wordOccurenceValues)
+    return calculateSentiment(features, featureOccurenceValues)
