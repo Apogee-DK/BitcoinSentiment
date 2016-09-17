@@ -1,4 +1,5 @@
-import parseTweet
+import csv
+from parseTweet import *
 
 # Retrieves data from database
 # from dbStatistics import *
@@ -10,18 +11,20 @@ def getfeatureOccurence():
 def calculateSentiment(_features, _featureOccurenceValues):
 
     tweetWordProbability = []
-    probabilityOfFeatureWithKnownValue = 1.0
+    probabilityOfPositiveFeature = 1.0
+    probabilityOfNegativeFeature = 1.0
     
     # dbStatistics will handle the following functions
     # P ( Value )
     # Must provide floating number
-    totalNumberOfPositiveTweets = getNumberOfPositiveTweets()
-    totalNumberOfNegativeTweets = getNumberOfNegativeTweets()
+    totalNumberOfPositiveTweets = float(getNumberOfPositiveTweets())
+    totalNumberOfNegativeTweets = float(getNumberOfNegativeTweets())
     totalNumberOfTweets = float(getNumberOfTweets())
     
     # FOR UNIT_TEST
-    # totalNumberOfPositiveTweets = 26
-    # totalNumberOfTweets = 50
+    # totalNumberOfNegativeTweets = 122.0
+    # totalNumberOfPositiveTweets = 225.0
+    # totalNumberOfTweets = 443.0
 
     probabilityOfPositivity = totalNumberOfPositiveTweets/totalNumberOfTweets
     probabilityOfNegativity = 1.0 - probabilityOfPositivity
@@ -36,12 +39,12 @@ def calculateSentiment(_features, _featureOccurenceValues):
         
         
         if(probabilityOfPositiveFeature > probabilityOfNegativeFeature):
-            result = 'pos'
+            result = 1
         elif(probabilityOfPositiveFeature < probabilityOfNegativeFeature):
-            result = 'neg'
+            result = -1
         else:
-            result = 'neut'               
-        
+            result = 0               
+    
     return result
 
 def getTweetSentiment(_tweetObject):
@@ -49,15 +52,16 @@ def getTweetSentiment(_tweetObject):
     featureOccurenceValues = getfeatureOccurence()
     
     # Get necessary values from TweetObject
-    features = _tweetObject.getFeatures()
-
+    features = getFeatures(_tweetObject)
+    print(features)
+    
     result = calculateSentiment(features, featureOccurenceValues)
 
-    if(result == 'neut'):
-        input('Require user analysis (pos, neg, neut) - ' + _tweetObject.getTweetText())
+    if(result == 0):
+        result = input('Require user analysis (pos, neg, neut) - ' + _tweetObject.getTweet() + ' - ')
 
     
-    # Determine the total value of the tweet
+    # Determine the total value of the tweet    
     return result
 
 def unit_test():
@@ -76,4 +80,40 @@ def unit_test():
     print(calculateSentiment(features, array))
 
     # result should be 0.79... which is correct
+
+
+# main #
+
+tweetObjectList = []
+
+with open('../dataset/tweet2.csv', 'rb') as csvfile:
+    tweetreader = csv.DictReader(csvfile)
+    linectr = 0
+    
+    for row in tweetreader:
+        linectr += 1
+        # print', '.join(row)
+        # print row['tweetID'], row['tweetText']
+        to = TweetObject(row)
+        tweetObjectList.append(to)
+        if linectr == 10:
+            break
+
+for to in tweetObjectList:
+    print(to.userID, ' ', to.tweetText, ' ', to.sentiment)
+    classifyWord(to)
+    # print '\n'
+
+with open('../dataset/tweet2.csv', 'rb') as csvfile:
+    tweetreader = csv.DictReader(csvfile)
+    linectr = 0
+    
+    for row in tweetreader:
+        linectr += 1
+        # print', '.join(row)
+        # print row['tweetID'], row['tweetText']
+        to = TweetObject(row)
+        print(to.tweetText, " ", getTweetSentiment(to))
+        if linectr == 10:
+            break
 

@@ -1,4 +1,3 @@
-import csv
 import re
 from nltk.corpus import stopwords
 import nltk
@@ -17,17 +16,17 @@ class TweetObject():
         
         # print row['userID'] , ' ', row['tweetText']
         # print row['userID'] , ' ', preprocessTweet(row['tweetText'])
- 
+        self.originalTweet = row['tweetText']
         self.tweetText = normalize(preprocessTweet(row['tweetText']))
         self.sentiment = int(row['Sentiment'])
 
-    # changed
-    def getFeatures(tweet):
-        tokens = nltk.word_tokenize(tweet)
-        return tokens
-
-    def getTweetText():
+    def getTweet(self):
         return self.tweetText
+
+# changed
+def getFeatures(tweetObj):
+        tokens = nltk.word_tokenize(tweetObj.tweetText)
+        return tokens
 
 def preprocessTweet(tweet):
 
@@ -68,7 +67,7 @@ def normalize(tweet):
 
 
 def classifyWord(tweet):
-    tokens = nltk.word_tokenize(to.tweetText)
+    tokens = nltk.word_tokenize(tweet.tweetText)
     for token in tokens:
 
         # if already in list, skip, else add to current value
@@ -95,31 +94,4 @@ def classifyWord(tweet):
                 weightedWords[token]['neg'] = 1 
                 
 def getKeyAndValue():
-    return weightedWords
-
-    
-# main #
-
-tweetObjectList = []
-
-
-with open('../tweet1.csv', 'rb') as csvfile:
-    tweetreader = csv.DictReader(csvfile)
-    linectr = 0
-    
-    for row in tweetreader:
-        linectr += 1
-        # print', '.join(row)
-        # print row['tweetID'], row['tweetText']
-        to = TweetObject(row)
-        tweetObjectList.append(to)
-        if linectr == 10:
-            break
-
-for to in tweetObjectList:
-    print to.userID, ' ', to.tweetText, ' ', to.sentiment
-    classifyWord(to)
-    # print '\n'
-
-pprint.pprint(weightedWords)
-    
+    return weightedWords   
