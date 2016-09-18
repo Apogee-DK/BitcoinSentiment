@@ -7,6 +7,22 @@ from requests.exceptions import *
 from urllib2 import *
 from decimal import *
 
+
+#import modules
+sys.path.insert(0, '../database/')
+sys.path.insert(0, '../classifier/')
+from probability import*
+from dbStatistics import*
+from parseTweet import*
+
+"""
+Strong Positive Sentiment = 2
+Positive Sentiment = 1
+Neutral = 0
+Negative Sentiment = -1
+Strong Negative Sentiment = -2
+"""
+
 # set up OAUTH
 def connectTwitter():
 
@@ -166,8 +182,10 @@ def twitterParseText(tweet_count,keyword):
                             # conn.commit()
                             print "price:  ", price
                             print "volume: ", volume
+                            to = TweetObject(tweet)
+                            val = getTweetSentiment(to)
+                            print "Sentiment Value: ", val
                             print ""
-  
 
                 except ValueError, err:
                     # read in a line is not in JSON format (sometimes error occured)
@@ -243,15 +261,17 @@ def removeNonEnglishWords(tweet):
 			
 def main():    
     # define new keywords
-    keywords = u"""bitcoin rise, bitcoin fall, bitcoin increase, bitcoin decrease, Bitcoin feel, $BTC feel, Bitcoin happy, $BTC happy, Bitcoin great, $BTC great, Bitcoin love, $BTC love, Bitcoin awesome, $BTC awesome,
-                  Bitcoin lucky, $BTC lucky, Bitcoin good, $BTC good, Bitcoin sad, $BTC sad, BTCUSD, $BTCUSD, #bitcoin bearish, bitcoin bearish, btc bearish, btc bullish, bitcoin bullish, 
-                  #bitcoin bullish, $btc bearish, bitcoin bear, btc bear, $btc bear, bitcoin bull, #bitcoin bull, bitcoin bearish, bitcoin bullish,
-                  Bitcoin bad, $BTC bad, Bitcoin upset, $BTC upset, Bitcoin unhappy, $BTC unhappy, Bitcoin nervous, $BTC nervous, Bitcoin hope, $BTC hope,
-                  Bitcoin fear, $BTC fear, Bitcoin worry, $BTC worry"""
+    keywords = "bitcoin, btc"
     #$AAPL, $AAPL Apple, $FB, $FB Facebook, $GOOG, $GOOG google,$SPY, $SPX
     # run through the codes
     # spaces = AND, commas = OR
     twitterParseText(100000002, keywords)
-
+    """
+    bitcoin rise, bitcoin fall, bitcoin increase, bitcoin decrease, Bitcoin feel, $BTC feel, Bitcoin happy, $BTC happy, Bitcoin great, $BTC great, Bitcoin love, $BTC love, Bitcoin awesome, $BTC awesome,
+                  Bitcoin lucky, $BTC lucky, Bitcoin good, $BTC good, Bitcoin sad, $BTC sad, BTCUSD, $BTCUSD, #bitcoin bearish, bitcoin bearish, btc bearish, btc bullish, bitcoin bullish, 
+                  #bitcoin bullish, $btc bearish, bitcoin bear, btc bear, $btc bear, bitcoin bull, #bitcoin bull, bitcoin bearish, bitcoin bullish,
+                  Bitcoin bad, $BTC bad, Bitcoin upset, $BTC upset, Bitcoin unhappy, $BTC unhappy, Bitcoin nervous, $BTC nervous, Bitcoin hope, $BTC hope,
+                  Bitcoin fear, $BTC fear, Bitcoin worry, $BTC worry
+    """
 
 main()

@@ -20,20 +20,21 @@ class TweetObject():
     tweetObjectCount = 0
     
     def __init__(self, row):
-        self.userID = row['userID']
+        self.userID = row['user']['id']
         
         # print row['userID'] , ' ', row['tweetText']
         # print row['userID'] , ' ', preprocessTweet(row['tweetText'])
-        self.originalTweet = row['tweetText']
-        self.tweetText = normalize(preprocessTweet(row['tweetText']))
-        self.sentiment = int(row['New Sentiment'])
+        self.originalTweet = row['text']
+        self.tweetText = normalize(preprocessTweet(row['text']))
+        #self.sentiment = int(row['New Sentiment'])
+
 
     def getTweet(self):
         return self.tweetText
 
 # changed
 def getFeatures(tweetObj):
-    tokens = nltk.word_tokenize(tweetObj.tweetText)
+    tokens = nltk.word_tokenize(tweetObj.originalTweet)
     return tokens
 
 # returns probabilities of 

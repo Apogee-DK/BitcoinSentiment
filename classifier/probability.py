@@ -1,11 +1,11 @@
 import csv
 from parseTweet import *
-
-import sys
+import sys, MySQLdb
 sys.path.insert(0, '../database/')
 
 # Retrieves data from database
 from dbStatistics import *
+
 
 def getfeatureOccurence():
     # dbStatistics function that returns a list of 'key': {'pos':1, 'neut':2, 'neg':3}
@@ -18,14 +18,13 @@ def calculateSentiment(_features, _featureOccurenceValues):
     probabilityOfPositiveFeature = 1.0
     probabilityOfNegativeFeature = 1.0
     result = 0
-    
+
     # dbStatistics will handle the following functions
     # P ( Value )
     # Must provide floating number
     totalNumberOfPositiveTweets = float(getNumberOfPositiveTweets())
     totalNumberOfNegativeTweets = float(getNumberOfNegativeTweets())
     totalNumberOfTweets = float(getNumberOfTweets())
-    
     # FOR UNIT_TEST
     # totalNumberOfNegativeTweets = 77.0
     # totalNumberOfPositiveTweets = 137.0
@@ -33,7 +32,7 @@ def calculateSentiment(_features, _featureOccurenceValues):
 
     probabilityOfPositivity = totalNumberOfPositiveTweets/totalNumberOfTweets
     probabilityOfNegativity = 1.0 - probabilityOfPositivity
-    
+
     # P ( Feature | Value )
     for feature in _features:
         if(feature in _featureOccurenceValues):
@@ -104,7 +103,7 @@ def unit_test():
 
 
 # main #
-
+"""
 tweetObjectList = []
 
 with open('../dataset/tweet3.csv', 'rb') as csvfile:
@@ -117,7 +116,7 @@ with open('../dataset/tweet3.csv', 'rb') as csvfile:
         # print row['tweetID'], row['tweetText']
         to = TweetObject(row)
         tweetObjectList.append(to)
-        if linectr == 30:
+        if linectr == 310:
             break
 
 for to in tweetObjectList:
@@ -127,17 +126,24 @@ for to in tweetObjectList:
 
 with open('../dataset/tweet3.csv', 'rb') as csvfile:
     tweetreader = csv.DictReader(csvfile)
-    linectr = 0
-    
+    linectr,y,predict,checkbool,val = 0,0,0,0.0,0
+    count = 0
     for row in tweetreader:
         linectr += 1
-
-        if(linectr < 31):
+        count += 1
+        if(linectr < 311):
             continue        
         # print', '.join(row)
         # print row['tweetID'], row['tweetText']
         to = TweetObject(row)
-        print(getTweetSentiment(to))
-        if linectr == 400:
+        y = to.sentiment
+        val = getTweetSentiment(to)
+        predict = val
+        checkbool += 1 if abs(y)>0 and abs(predict)>0 else 0 
+        print val
+
+        if linectr == 432:
+            #print "Training Set Accuracy: ", (checkbool/float(count)) * 100
             break
 
+"""
