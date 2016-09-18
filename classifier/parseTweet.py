@@ -157,7 +157,7 @@ def classifyWord(tweet):
         if token in weightedWords:
             if tweet.sentiment == 2:
                 weightedWords[token]['pos'] += 1
-            if tweet.sentiment == 1:
+            elif tweet.sentiment == 1:
                 weightedWords[token]['lpos'] += 1
             elif tweet.sentiment == 0:
                 weightedWords[token]['neut'] += 1
@@ -173,7 +173,7 @@ def classifyWord(tweet):
                 weightedWords[token]['neut'] = 0
                 weightedWords[token]['neg'] = 0
                 weightedWords[token]['lneg'] = 0
-            if tweet.sentiment == 1:
+            elif tweet.sentiment == 1:
                 weightedWords[token]['pos'] = 0
                 weightedWords[token]['lpos'] = 1
                 weightedWords[token]['neut'] = 0

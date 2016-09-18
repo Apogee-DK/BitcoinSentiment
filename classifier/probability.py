@@ -72,7 +72,6 @@ def calculateSentiment(_features, _featureOccurenceValues):
 def getTweetSentiment(_tweetObject):
     # Get dictionary of <word, list of values (pos, lpos, neu, lneg, neg)>
     featureOccurenceValues = getfeatureOccurence()
-    
     # Get necessary values from TweetObject
     features = getFeatures(_tweetObject)
     print(_tweetObject.getTweet())
@@ -118,7 +117,7 @@ with open('../dataset/tweet3.csv', 'rb') as csvfile:
         # print row['tweetID'], row['tweetText']
         to = TweetObject(row)
         tweetObjectList.append(to)
-        if linectr == 300:
+        if linectr == 30:
             break
 
 for to in tweetObjectList:
@@ -132,7 +131,8 @@ with open('../dataset/tweet3.csv', 'rb') as csvfile:
     
     for row in tweetreader:
         linectr += 1
-        if(linectr < 301):
+
+        if(linectr < 31):
             continue        
         # print', '.join(row)
         # print row['tweetID'], row['tweetText']
