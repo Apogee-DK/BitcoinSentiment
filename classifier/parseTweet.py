@@ -9,7 +9,7 @@ import cStringIO, ast, sys, time
 #from vaderSentiment.vaderSentiment import sentiment as vaderSentiment
 
 
-excludeWords = ['AT_USER', 'url', 'rt', 'user', 'btc', 'bitcoin', 'bitstamp']
+excludeWords = ['AT_USER', 'at_user', 'url', 'rt', 'user', 'btc', 'bitcoin', 'bitstamp']
 weightedWords = {}
 
 
@@ -150,26 +150,62 @@ def classifyWord(tweet):
 
         # if already in list, skip, else add to current value
         if token in weightedWords:
-            if tweet.sentiment == 1:
+            if tweet.sentiment == 2:
                 weightedWords[token]['pos'] += 1
+            if tweet.sentiment == 1:
+                weightedWords[token]['lpos'] += 1
             elif tweet.sentiment == 0:
                 weightedWords[token]['neut'] += 1
             elif tweet.sentiment == -1:
                 weightedWords[token]['neg'] += 1
+            elif tweet.sentiment == -2:
+                weightedWords[token]['lneg'] += 1
         else:
             weightedWords[token] = {}
-            if tweet.sentiment == 1:
+            if tweet.sentiment == 2:
                 weightedWords[token]['pos'] = 1
+                weightedWords[token]['lpos'] = 0
                 weightedWords[token]['neut'] = 0
-                weightedWords[token]['neg'] = 0 
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 0
+            if tweet.sentiment == 1:
+                weightedWords[token]['pos'] = 0
+                weightedWords[token]['lpos'] = 1
+                weightedWords[token]['neut'] = 0
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 0
             elif tweet.sentiment == 0:   
                 weightedWords[token]['pos'] = 0
+                weightedWords[token]['lpos'] = 0
                 weightedWords[token]['neut'] = 1
-                weightedWords[token]['neg'] = 0        
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 0      
             elif tweet.sentiment == -1:
                 weightedWords[token]['pos'] = 0
+                weightedWords[token]['lpos'] = 0
                 weightedWords[token]['neut'] = 0
-                weightedWords[token]['neg'] = 1 
+                weightedWords[token]['neg'] = 1
+                weightedWords[token]['lneg'] = 0
+            elif tweet.sentiment == -2:
+                weightedWords[token]['pos'] = 0
+                weightedWords[token]['lpos'] = 0
+                weightedWords[token]['neut'] = 0
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 1
+                
+        pos = weightedWords[token]['pos']
+        lpos = weightedWords[token]['lpos']
+        neut = weightedWords[token]['neut']
+        neg = weightedWords[token]['neg']
+        lneg = weightedWords[token]['lneg']
+
+        # write to db, then print it
+        putWord(token,pos,lpos,neut,neg,lneg)
+        pprint.pprint( getWord(token))
+        
+        # firebase.put(firebase_URL + token, {'pos': pos, 'neut': neut, 'neg': neg})
+        # print token, ' ', firebase.get(firebase_URL + token)
+        ##print ('\n')
                 
 def getKeyAndValue():
     return weightedWords   
