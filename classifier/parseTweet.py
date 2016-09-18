@@ -6,6 +6,9 @@ import json
 import requests
 import pycurl
 import cStringIO, ast, sys, time
+sys.path.insert(0, '../database/')
+
+from dbStatistics import *
 #from vaderSentiment.vaderSentiment import sentiment as vaderSentiment
 
 
