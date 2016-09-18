@@ -48,6 +48,8 @@ def preprocessTweet(tweet):
     tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
     #trim
     tweet = tweet.strip('\'"')
+    #replace # between words with ' '
+    tweet = tweet.replace("#", " ")
 
     return tweet
 
@@ -150,7 +152,7 @@ def getKeyAndValue():
 
 tweetObjectList = []
 
-with open('../dataset/tweet2.csv', 'rb') as csvfile:
+with open('../dataset/tweet3.csv', 'rb') as csvfile:
     tweetreader = csv.DictReader(csvfile)
     linectr = 0
     

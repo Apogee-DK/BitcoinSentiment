@@ -1,12 +1,16 @@
 import csv
 from parseTweet import *
 
+import sys
+sys.path.insert(0, '../database/')
+
 # Retrieves data from database
-# from dbStatistics import *
+from dbStatistics import *
 
 def getfeatureOccurence():
     # dbStatistics function that returns a list of 'key': {'pos':1, 'neut':2, 'neg':3}
-    return getKeyAndValue()
+    # return getKeyAndValue()
+    return getAllWeightedWords()
 
 def calculateSentiment(_features, _featureOccurenceValues):
 
@@ -18,14 +22,14 @@ def calculateSentiment(_features, _featureOccurenceValues):
     # dbStatistics will handle the following functions
     # P ( Value )
     # Must provide floating number
-    # totalNumberOfPositiveTweets = float(getNumberOfPositiveTweets())
-    # totalNumberOfNegativeTweets = float(getNumberOfNegativeTweets())
-    # totalNumberOfTweets = float(getNumberOfTweets())
+    totalNumberOfPositiveTweets = float(getNumberOfPositiveTweets())
+    totalNumberOfNegativeTweets = float(getNumberOfNegativeTweets())
+    totalNumberOfTweets = float(getNumberOfTweets())
     
     # FOR UNIT_TEST
-    totalNumberOfNegativeTweets = 77.0
-    totalNumberOfPositiveTweets = 137.0
-    totalNumberOfTweets = 300.0
+    # totalNumberOfNegativeTweets = 77.0
+    # totalNumberOfPositiveTweets = 137.0
+    # totalNumberOfTweets = 300.0
 
     probabilityOfPositivity = totalNumberOfPositiveTweets/totalNumberOfTweets
     probabilityOfNegativity = 1.0 - probabilityOfPositivity

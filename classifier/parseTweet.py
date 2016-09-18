@@ -95,6 +95,8 @@ def preprocessTweet(tweet):
     tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
     #trim
     tweet = tweet.strip('\'"')
+    #replace # between words with ' '
+    tweet = tweet.replace("#", " ")
 
     return tweet
 
