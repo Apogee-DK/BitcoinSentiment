@@ -107,7 +107,7 @@ def unit_test():
 
 tweetObjectList = []
 
-with open('../dataset/tweet2.csv', 'rb') as csvfile:
+with open('../dataset/tweet3.csv', 'rb') as csvfile:
     tweetreader = csv.DictReader(csvfile)
     linectr = 0
     
@@ -125,7 +125,7 @@ for to in tweetObjectList:
     classifyWord(to)
     # print '\n'
 
-with open('../dataset/tweet2.csv', 'rb') as csvfile:
+with open('../dataset/tweet3.csv', 'rb') as csvfile:
     tweetreader = csv.DictReader(csvfile)
     linectr = 0
     
@@ -137,6 +137,6 @@ with open('../dataset/tweet2.csv', 'rb') as csvfile:
         # print row['tweetID'], row['tweetText']
         to = TweetObject(row)
         print(getTweetSentiment(to))
-        if linectr == 143:
+        if linectr == 400:
             break
 
