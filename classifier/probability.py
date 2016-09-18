@@ -58,6 +58,7 @@ def calculateSentiment(_features, _featureOccurenceValues):
                 result = 2
             else:
                 result = 1
+
         elif(probabilityOfPositiveFeature < probabilityOfNegativeFeature):
             if(listOfValues['neg'] > listOfValues['lneg']):
                 result = -2

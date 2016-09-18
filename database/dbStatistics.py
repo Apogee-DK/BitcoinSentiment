@@ -19,7 +19,7 @@ def getNumberOfPositiveTweets():
     sumPos = 0
     weightedWordDict = getAllWeightedWords()
     for w in weightedWordDict:
-        #print(weightedWordDict[w]['lpos'])
+        print(weightedWordDict[w]['lpos'])
         sumPos += int(weightedWordDict[w]['lpos']) +  int(weightedWordDict[w]['pos'])
     return sumPos
     
@@ -27,7 +27,7 @@ def getNumberOfNegativeTweets():
     sumNeg = 0
     weightedWordDict = getAllWeightedWords()
     for w in weightedWordDict:
-        #print(weightedWordDict[w]['lpos'])
+        print(weightedWordDict[w]['lpos'])
         sumNeg += int(weightedWordDict[w]['lneg']) +  int(weightedWordDict[w]['neg'])
     return sumNeg
 

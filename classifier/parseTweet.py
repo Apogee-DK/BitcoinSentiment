@@ -206,7 +206,7 @@ def classifyWord(tweet):
 
         # write to db, then print it
         putWord(token,pos,lpos,neut,neg,lneg)
-        pprint.pprint( getWord(token))
+        #pprint.pprint(getWord(token))
         
         # firebase.put(firebase_URL + token, {'pos': pos, 'neut': neut, 'neg': neg})
         # print token, ' ', firebase.get(firebase_URL + token)
