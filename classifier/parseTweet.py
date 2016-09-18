@@ -26,7 +26,7 @@ class TweetObject():
         # print row['userID'] , ' ', preprocessTweet(row['tweetText'])
         self.originalTweet = row['tweetText']
         self.tweetText = normalize(preprocessTweet(row['tweetText']))
-        self.sentiment = int(row['Sentiment'])
+        self.sentiment = int(row['New Sentiment'])
 
     def getTweet(self):
         return self.tweetText
@@ -206,7 +206,7 @@ def classifyWord(tweet):
 
         # write to db, then print it
         putWord(token,pos,lpos,neut,neg,lneg)
-        #pprint.pprint(getWord(token))
+        pprint.pprint( getWord(token))
         
         # firebase.put(firebase_URL + token, {'pos': pos, 'neut': neut, 'neg': neg})
         # print token, ' ', firebase.get(firebase_URL + token)
