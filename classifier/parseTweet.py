@@ -26,6 +26,8 @@ class TweetObject():
         tokens = nltk.word_tokenize(tweet)
         return tokens
 
+    def getTweetText():
+        return self.tweetText
 
 def preprocessTweet(tweet):
 
@@ -92,7 +94,10 @@ def classifyWord(tweet):
                 weightedWords[token]['neut'] = 0
                 weightedWords[token]['neg'] = 1 
                 
+def getKeyAndValue():
+    return weightedWords
 
+    
 # main #
 
 tweetObjectList = []
