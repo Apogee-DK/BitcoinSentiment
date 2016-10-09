@@ -12,6 +12,7 @@ def getfeatureOccurence():
     # return getKeyAndValue()
     return getAllWeightedWords()
 
+
 def calculateSentiment(_features, _featureOccurenceValues):
 
     tweetWordProbability = []
@@ -68,13 +69,21 @@ def calculateSentiment(_features, _featureOccurenceValues):
     
     return result
 
+
+
 def getTweetSentiment(_tweetObject):
-    # Get dictionary of <word, list of values (pos, lpos, neu, lneg, neg)>
+   
+
+    # update the dictionary of words into the database
+    #updateFeatures(_tweetObject)
+
+     # Get dictionary of <word, list of values (pos, lpos, neu, lneg, neg)>
     featureOccurenceValues = getfeatureOccurence()
+    
     # Get necessary values from TweetObject
     features = getFeatures(_tweetObject)
     print(_tweetObject.getTweet())
-    
+
     result = calculateSentiment(features, featureOccurenceValues)
 
     if(result == 0):
@@ -83,6 +92,8 @@ def getTweetSentiment(_tweetObject):
     
     # Determine the total value of the tweet    
     return result
+
+
 
 def unit_test():
     array = {'love' : {'neg':4, 'neut':10, 'pos':4},

@@ -26,7 +26,7 @@ class TweetObject():
         # print row['userID'] , ' ', preprocessTweet(row['tweetText'])
         self.originalTweet = row['text']
         self.tweetText = normalize(preprocessTweet(row['text']))
-        #self.sentiment = int(row['New Sentiment'])
+        self.sentiment = int(row['New Sentiment'])
 
 
     def getTweet(self):
@@ -150,8 +150,71 @@ def normalize(tweet):
     return " ".join(set(tokens))
 
 
+
+def updateFeatures(tweetobj):
+
+    tokens = getFeatures(tweetobj)
+    weightedWords = getAllWeightedWords()
+    for token in tokens:
+
+        if token in weightedwords:
+            if tweet.sentiment == 2:
+                weightedWords[token]['lpos'] += 1
+            elif tweet.sentiment == 1:
+                weightedWords[token]['pos'] += 1
+            elif tweet.sentiment == 0:
+                weightedWords[token]['neut'] += 1
+            elif tweet.sentiment == -1:
+                weightedWords[token]['neg'] += 1
+            elif tweet.sentiment == -2:
+                weightedWords[token]['lneg'] += 1
+        else:
+            weightedWords[token] = {}
+            if tweet.sentiment == 2:
+                weightedWords[token]['lpos'] = 1
+                weightedWords[token]['pos'] = 0
+                weightedWords[token]['neut'] = 0
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 0
+            elif tweet.sentiment == 1:
+                weightedWords[token]['lpos'] = 0
+                weightedWords[token]['pos'] = 1
+                weightedWords[token]['neut'] = 0
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 0
+            elif tweet.sentiment == 0:   
+                weightedWords[token]['lpos'] = 0
+                weightedWords[token]['pos'] = 0
+                weightedWords[token]['neut'] = 1
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 0      
+            elif tweet.sentiment == -1:
+                weightedWords[token]['lpos'] = 0
+                weightedWords[token]['pos'] = 0
+                weightedWords[token]['neut'] = 0
+                weightedWords[token]['neg'] = 1
+                weightedWords[token]['lneg'] = 0
+            elif tweet.sentiment == -2:
+                weightedWords[token]['pos'] = 0
+                weightedWords[token]['lpos'] = 0
+                weightedWords[token]['neut'] = 0
+                weightedWords[token]['neg'] = 0
+                weightedWords[token]['lneg'] = 1
+                
+        pos = weightedWords[token]['pos']
+        lpos = weightedWords[token]['lpos']
+        neut = weightedWords[token]['neut']
+        neg = weightedWords[token]['neg']
+        lneg = weightedWords[token]['lneg']
+
+        # write to db, then print it
+        putWord(token,pos,lpos,neut,neg,lneg)
+
+
+
 def classifyWord(tweet):
-    tokens = nltk.word_tokenize(tweet.tweetText)
+
+    tokens = getFeatures(tweet)
     for token in tokens:
 
         # if already in list, skip, else add to current value
